@@ -1,0 +1,275 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+/*
+ * MERAKI STUDIO — design system
+ * Monochrome charcoal / ivory editorial identity.
+ * All colors are oklch tokens. Never hardcode colors in components.
+ */
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-deep: var(--surface-deep);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ivory: var(--ivory);
+  --color-ivory-dim: var(--ivory-dim);
+  --color-ash: var(--ash);
+
+  --font-display: "Cormorant Garamond", "Times New Roman", serif;
+  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-signature: "Italianno", cursive;
+
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+
+  --ease-meraki: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:root {
+  /* charcoal base */
+  --background: oklch(0.211 0 0); /* #171717 */
+  --surface-deep: oklch(0.169 0 0); /* #111111 */
+  --surface: oklch(0.254 0 0); /* #202020 */
+  --foreground: oklch(0.949 0.006 84.6); /* #F2F0EA */
+  --ivory: oklch(0.949 0.006 84.6);
+  --ivory-dim: oklch(0.869 0.005 84.6); /* #D8D6D0 */
+  --ash: oklch(0.646 0.004 106); /* #92928D */
+
+  --card: oklch(0.254 0 0);
+  --card-foreground: oklch(0.949 0.006 84.6);
+  --popover: oklch(0.169 0 0);
+  --popover-foreground: oklch(0.949 0.006 84.6);
+
+  --primary: oklch(0.949 0.006 84.6);
+  --primary-foreground: oklch(0.211 0 0);
+  --secondary: oklch(0.254 0 0);
+  --secondary-foreground: oklch(0.949 0.006 84.6);
+  --muted: oklch(0.254 0 0);
+  --muted-foreground: oklch(0.646 0.004 106);
+  --accent: oklch(0.303 0 0);
+  --accent-foreground: oklch(0.949 0.006 84.6);
+  --destructive: oklch(0.62 0.13 25);
+  --destructive-foreground: oklch(0.949 0.006 84.6);
+
+  --border: oklch(0.949 0.006 84.6 / 18%);
+  --border-strong: oklch(0.335 0 0); /* #353535 */
+  --input: oklch(0.949 0.006 84.6 / 18%);
+  --ring: oklch(0.869 0.005 84.6 / 60%);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: var(--color-ivory);
+    color: var(--color-background);
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 300;
+  }
+
+  :focus-visible {
+    outline: 1px solid var(--color-ivory);
+    outline-offset: 3px;
+  }
+}
+
+/* ── Utilities ────────────────────────────────────────────── */
+
+@utility grain {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+  }
+}
+
+@utility label-xs {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-ash);
+}
+
+@utility signature {
+  font-family: var(--font-signature);
+  font-weight: 400;
+  line-height: 0.8;
+}
+
+@utility display-hero {
+  font-family: var(--font-display);
+  font-weight: 300;
+  line-height: 0.85;
+  letter-spacing: -0.02em;
+  font-size: clamp(3.5rem, 17vw, 6rem);
+  @media (min-width: 768px) {
+    font-size: clamp(5rem, 10.5vw, 11rem);
+  }
+}
+
+@utility display-section {
+  font-family: var(--font-display);
+  font-weight: 300;
+  line-height: 0.94;
+  letter-spacing: -0.015em;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+}
+
+@utility arch-mask {
+  border-top-left-radius: 50% 38%;
+  border-top-right-radius: 50% 38%;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  overflow: hidden;
+}
+
+@utility shell {
+  width: 100%;
+  max-width: 1560px;
+  margin-inline: auto;
+  padding-inline: 20px;
+  @media (min-width: 640px) {
+    padding-inline: 32px;
+  }
+  @media (min-width: 1024px) {
+    padding-inline: 56px;
+  }
+  @media (min-width: 1440px) {
+    padding-inline: 96px;
+  }
+}
+
+@utility hairline {
+  height: 1px;
+  width: 100%;
+  background: var(--color-border);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* hide native scrollbar on drag carousels */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Card Fan Carousel (21st Component) ─────────────────── */
+.fan-layout {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 80rem;
+  height: 38rem;
+}
+
+@media (max-width: 1024px) {
+  .fan-layout { height: 34rem; }
+}
+@media (max-width: 768px) {
+  .fan-layout { height: 28rem; }
+}
+@media (max-width: 640px) {
+  .fan-layout { height: 26rem; }
+}
+@media (max-width: 480px) {
+  .fan-layout { height: 22rem; }
+}
+
+.fan-card {
+  position: absolute;
+  width: 16.5rem;
+  height: 25rem;
+  border-radius: 1.25rem;
+  overflow: hidden;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background-color: var(--color-surface-deep);
+  will-change: transform, opacity;
+  transform-origin: center center;
+}
+
+@media (max-width: 1024px) {
+  .fan-card {
+    width: 14rem;
+    height: 21.5rem;
+  }
+}
+@media (max-width: 768px) {
+  .fan-card {
+    width: 11.5rem;
+    height: 17.5rem;
+  }
+}
+@media (max-width: 640px) {
+  .fan-card {
+    width: 9.5rem;
+    height: 14.5rem;
+  }
+}
+@media (max-width: 480px) {
+  .fan-card {
+    width: 7.5rem;
+    height: 11.5rem;
+  }
+}
+
