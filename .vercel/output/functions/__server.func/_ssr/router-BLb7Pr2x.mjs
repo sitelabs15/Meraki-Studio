@@ -1,29 +1,9 @@
-import { o as __toESM, r as __exportAll$1 } from "../_runtime.mjs";
+import { o as __toESM } from "../_runtime.mjs";
 import { r as require_react } from "../_libs/@hookform/resolvers+[...].mjs";
 import { _ as Link, f as createRouter, g as createRootRouteWithContext, h as createFileRoute, l as Scripts, m as lazyRouteComponent, p as Outlet, u as HeadContent, v as useRouter } from "../_libs/@tanstack/react-router+[...].mjs";
 import { n as require_jsx_runtime, t as QueryClientProvider } from "../_libs/react+tanstack__react-query.mjs";
 import { t as QueryClient } from "../_libs/tanstack__query-core.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/router-CNa3IeB_.js
-var router_CNa3IeB__exports = /* @__PURE__ */ __exportAll$1({
-	_: () => __exportAll,
-	a: () => contact,
-	c: () => footer,
-	d: () => nav,
-	f: () => portfolio,
-	g: () => testimonialsCopy,
-	getRouter: () => getRouter,
-	h: () => testimonials,
-	i: () => carousel,
-	l: () => hero,
-	m: () => services,
-	n: () => about,
-	o: () => faq,
-	p: () => portfolioCategories,
-	r: () => booking,
-	s: () => finalCta,
-	t: () => router_exports,
-	u: () => intro
-});
+//#region node_modules/.nitro/vite/services/ssr/assets/router-BLb7Pr2x.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 var __defProp = Object.defineProperty;
@@ -36,7 +16,7 @@ var __exportAll = (all, no_symbols) => {
 	if (!no_symbols) __defProp(target, Symbol.toStringTag, { value: "Module" });
 	return target;
 };
-var styles_default = "/assets/styles-CK4Bv270.css";
+var styles_default = "/assets/styles-BqQVTdd2.css";
 function reportLovableError(error, context = {}) {
 	if (typeof window === "undefined") return;
 	window.__lovableEvents?.captureException?.(error, {
@@ -189,7 +169,7 @@ var Route$1 = createRootRouteWithContext()({
 function RootShell({ children }) {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("html", {
 		lang: "es-MX",
-		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("head", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(HeadContent, {}) }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("body", { children: [children, /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Scripts, {})] })]
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("head", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("script", { dangerouslySetInnerHTML: { __html: `(function(){try{var t=localStorage.getItem('meraki-theme');if(t==='light'){document.documentElement.classList.add('light');document.documentElement.setAttribute('data-theme','light');}else{document.documentElement.classList.remove('light');document.documentElement.setAttribute('data-theme','dark');}}catch(e){}})();` } }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(HeadContent, {})] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("body", { children: [children, /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Scripts, {})] })]
 	});
 }
 function RootComponent() {
@@ -199,7 +179,7 @@ function RootComponent() {
 		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Outlet, {})
 	});
 }
-var artist_portrait_default = "/assets/artist-portrait-DOMdBhPu.png";
+var artist_portrait_default = "/assets/artist-portrait-7WoEkexP.webp";
 var work_01_default = "/assets/work-01-DbkPAG7B.jpg";
 var work_02_default = "/assets/work-02-Dwiu7rU6.jpg";
 var work_03_default = "/assets/work-03-D-WvtcAO.jpg";
@@ -618,7 +598,7 @@ var footer = {
 		}
 	]
 };
-var $$splitComponentImporter = () => import("./routes-UOhnqnxo.mjs").then((n) => n.t);
+var $$splitComponentImporter = () => import("./routes-ChQFt6EJ.mjs");
 var TITLE = "Meraki Studio | Tatuajes personalizados en Puebla";
 var DESCRIPTION = "Estudio de tatuajes en Puebla. Conoce el portafolio de Meraki Studio, comparte tu idea y solicita una cotización o cita directamente por WhatsApp.";
 var rootRouteChildren = { IndexRoute: createFileRoute("/")({
@@ -683,4 +663,4 @@ var getRouter = () => {
 	});
 };
 //#endregion
-export { testimonialsCopy as _, contact as a, footer as c, nav as d, portfolio as f, testimonials as g, services as h, carousel as i, hero as l, router_CNa3IeB__exports as m, about as n, faq as o, portfolioCategories as p, booking as r, finalCta as s, __exportAll as t, intro as u };
+export { __exportAll as _, contact as a, footer as c, nav as d, portfolio as f, testimonialsCopy as g, testimonials as h, carousel as i, hero as l, services as m, about as n, faq as o, portfolioCategories as p, booking as r, finalCta as s, router_exports as t, intro as u };
