@@ -49,7 +49,7 @@ export function PortfolioLightbox({
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  });
+  }, [onClose, next, prev]);
 
   if (!project) return null;
 
@@ -73,7 +73,7 @@ export function PortfolioLightbox({
         if (Math.abs(dx) > 48) (dx < 0 ? next : prev)();
         touchX.current = null;
       }}
-      className="fixed inset-0 z-[90] flex flex-col bg-surface-deep/97 backdrop-blur-sm"
+      className="fixed inset-0 z-[200] flex flex-col bg-surface-deep/97 backdrop-blur-md"
     >
       <div className="shell flex h-[72px] shrink-0 items-center justify-between">
         <span className="label-xs">
@@ -81,25 +81,33 @@ export function PortfolioLightbox({
         </span>
         <button
           type="button"
-          onClick={onClose}
+          onClick={(e) => {
+            e.stopPropagation();
+            onClose();
+          }}
           aria-label="Cerrar galería"
-          className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-border text-ivory transition-colors hover:bg-surface"
+          className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-border text-ivory transition-colors hover:bg-surface hover:text-white cursor-pointer"
         >
-          <X className="size-4" aria-hidden="true" />
+          <X className="size-5" aria-hidden="true" />
         </button>
       </div>
 
-      <div className="flex min-h-0 flex-1 items-center justify-center px-5 pb-4">
+      <div
+        className="flex min-h-0 flex-1 items-center justify-center px-5 pb-4"
+        onClick={(e) => {
+          if (e.target === e.currentTarget) onClose();
+        }}
+      >
         <motion.img
           key={project.id}
-          initial={{ opacity: 0, scale: 0.99 }}
+          initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
           src={project.image}
           alt={project.alt}
           width={project.width}
           height={project.height}
-          className="max-h-full max-w-full rounded-sm object-contain"
+          className="max-h-full max-w-full rounded-sm object-contain shadow-2xl"
         />
       </div>
 
@@ -110,22 +118,30 @@ export function PortfolioLightbox({
               {project.category} · {project.area}
             </p>
             <h3 className="mt-2 font-display text-2xl font-light text-ivory">{project.title}</h3>
-            <p className="mt-2 max-w-xl text-sm text-ivory-dim/75">{project.description}</p>
+            {project.description && (
+              <p className="mt-2 max-w-xl text-sm text-ivory-dim/75">{project.description}</p>
+            )}
           </div>
           <div className="flex gap-2">
             <button
               type="button"
-              onClick={prev}
+              onClick={(e) => {
+                e.stopPropagation();
+                prev();
+              }}
               aria-label="Proyecto anterior"
-              className="inline-flex size-12 items-center justify-center rounded-full border border-border text-ivory transition-colors hover:bg-surface"
+              className="inline-flex size-12 items-center justify-center rounded-full border border-border text-ivory transition-colors hover:bg-surface cursor-pointer"
             >
               <ArrowLeft className="size-4" aria-hidden="true" />
             </button>
             <button
               type="button"
-              onClick={next}
+              onClick={(e) => {
+                e.stopPropagation();
+                next();
+              }}
               aria-label="Proyecto siguiente"
-              className="inline-flex size-12 items-center justify-center rounded-full border border-border text-ivory transition-colors hover:bg-surface"
+              className="inline-flex size-12 items-center justify-center rounded-full border border-border text-ivory transition-colors hover:bg-surface cursor-pointer"
             >
               <ArrowRight className="size-4" aria-hidden="true" />
             </button>

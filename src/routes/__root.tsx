@@ -95,6 +95,11 @@ function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="es-MX">
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('meraki-theme');if(t==='light'){document.documentElement.classList.add('light');document.documentElement.setAttribute('data-theme','light');}else{document.documentElement.classList.remove('light');document.documentElement.setAttribute('data-theme','dark');}}catch(e){}})();`,
+          }}
+        />
         <HeadContent />
       </head>
       <body>

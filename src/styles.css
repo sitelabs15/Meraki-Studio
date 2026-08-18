@@ -3,9 +3,9 @@
 @import "tw-animate-css";
 
 /*
- * MERAKI STUDIO — design system
- * Monochrome charcoal / ivory editorial identity.
- * All colors are oklch tokens. Never hardcode colors in components.
+ * MERAKI STUDIO — Cinematic Dark Editorial Design System
+ * Luxury charcoal, deep obsidian, fine warm ivory & botanical accents.
+ * All tokens adhere to an 8px spacing system and semantic variables.
  */
 
 @theme inline {
@@ -13,6 +13,7 @@
   --color-foreground: var(--foreground);
   --color-surface: var(--surface);
   --color-surface-deep: var(--surface-deep);
+  --color-surface-elevated: var(--surface-elevated);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
@@ -28,12 +29,14 @@
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
+  --color-border-subtle: var(--border-subtle);
   --color-border-strong: var(--border-strong);
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-ivory: var(--ivory);
   --color-ivory-dim: var(--ivory-dim);
   --color-ash: var(--ash);
+  --color-gold: var(--gold);
 
   --font-display: "Cormorant Garamond", "Times New Roman", serif;
   --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
@@ -42,40 +45,154 @@
   --radius-sm: 2px;
   --radius-md: 4px;
   --radius-lg: 8px;
+  --radius-full: 9999px;
 
   --ease-meraki: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 :root {
-  /* charcoal base */
-  --background: oklch(0.211 0 0); /* #171717 */
-  --surface-deep: oklch(0.169 0 0); /* #111111 */
-  --surface: oklch(0.254 0 0); /* #202020 */
-  --foreground: oklch(0.949 0.006 84.6); /* #F2F0EA */
-  --ivory: oklch(0.949 0.006 84.6);
-  --ivory-dim: oklch(0.869 0.005 84.6); /* #D8D6D0 */
-  --ash: oklch(0.646 0.004 106); /* #92928D */
+  /* ── DARK THEME (Default Cinematic Obsidian) ─────────────────── */
+  --background: #111113;
+  --surface-deep: #0b0b0c;
+  --surface: #18181b;
+  --surface-elevated: #222226;
+  
+  --foreground: #f5f3ed;
+  --ivory: #f5f3ed;
+  --ivory-dim: #d8d5cc;
+  --ash: #8e8d89;
+  --gold: #d4af37;
+  --sage: #7a8b7b;
+  --sage-dim: rgba(122, 139, 123, 0.18);
 
-  --card: oklch(0.254 0 0);
-  --card-foreground: oklch(0.949 0.006 84.6);
-  --popover: oklch(0.169 0 0);
-  --popover-foreground: oklch(0.949 0.006 84.6);
+  --card: #18181b;
+  --card-foreground: #f5f3ed;
+  --popover: #0b0b0c;
+  --popover-foreground: #f5f3ed;
 
-  --primary: oklch(0.949 0.006 84.6);
-  --primary-foreground: oklch(0.211 0 0);
-  --secondary: oklch(0.254 0 0);
-  --secondary-foreground: oklch(0.949 0.006 84.6);
-  --muted: oklch(0.254 0 0);
-  --muted-foreground: oklch(0.646 0.004 106);
-  --accent: oklch(0.303 0 0);
-  --accent-foreground: oklch(0.949 0.006 84.6);
-  --destructive: oklch(0.62 0.13 25);
-  --destructive-foreground: oklch(0.949 0.006 84.6);
+  --primary: #f5f3ed;
+  --primary-foreground: #111113;
+  --secondary: #1f1f23;
+  --secondary-foreground: #f5f3ed;
+  --muted: #1c1c1f;
+  --muted-foreground: #8e8d89;
+  --accent: #27272b;
+  --accent-foreground: #f5f3ed;
+  --destructive: #b91c1c;
+  --destructive-foreground: #f5f3ed;
 
-  --border: oklch(0.949 0.006 84.6 / 18%);
-  --border-strong: oklch(0.335 0 0); /* #353535 */
-  --input: oklch(0.949 0.006 84.6 / 18%);
-  --ring: oklch(0.869 0.005 84.6 / 60%);
+  --border: rgba(245, 243, 237, 0.12);
+  --border-subtle: rgba(245, 243, 237, 0.06);
+  --border-strong: rgba(245, 243, 237, 0.24);
+  --input: rgba(245, 243, 237, 0.12);
+  --ring: rgba(245, 243, 237, 0.5);
+
+  /* Explicit Semantic Color Tokens */
+  --color-bg: var(--background);
+  --color-bg-secondary: var(--surface-deep);
+  --color-text: var(--foreground);
+  --color-text-muted: var(--ash);
+  --color-border: var(--border);
+  --color-accent: var(--gold);
+  --color-surface: var(--surface);
+  --color-overlay: rgba(11, 11, 12, 0.75);
+  --color-button-bg: var(--primary);
+  --color-button-text: var(--primary-foreground);
+
+  /* Shadows */
+  --shadow-soft: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+  --shadow-deep: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+  --shadow-glow: 0 0 25px rgba(245, 243, 237, 0.08);
+
+  /* Animation Easings */
+  --ease-meraki: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-smooth: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* Z-Index Layers Scale */
+  --z-bg: 0;
+  --z-decorative: 2;
+  --z-title: 8;
+  --z-portrait: 10;
+  --z-leaves: 12;
+  --z-content: 20;
+  --z-floating: 70;
+  --z-header: 100;
+  --z-modal: 200;
+  --z-cursor: 9990;
+  --z-loading: 9999;
+
+  /* 8px Spacing Scale */
+  --space-1: 0.25rem; /* 4px */
+  --space-2: 0.5rem;  /* 8px */
+  --space-3: 0.75rem; /* 12px */
+  --space-4: 1rem;    /* 16px */
+  --space-5: 1.25rem; /* 20px */
+  --space-6: 1.5rem;  /* 24px */
+  --space-8: 2rem;    /* 32px */
+  --space-10: 2.5rem; /* 40px */
+  --space-12: 3rem;   /* 48px */
+  --space-16: 4rem;   /* 64px */
+  --space-20: 5rem;   /* 80px */
+  --space-24: 6rem;   /* 96px */
+  --space-32: 8rem;   /* 128px */
+}
+
+/* ── LIGHT THEME (Editorial Parchment / Art Book Edition) ───────── */
+:root.light,
+[data-theme="light"],
+.light {
+  --background: #f7f5f0;
+  --surface-deep: #ede8dc;
+  --surface: #f1ede3;
+  --surface-elevated: #e4dfd1;
+
+  --foreground: #1a1918;
+  --ivory: #1a1918;
+  --ivory-dim: #423f3a;
+  --ash: #737068;
+  --gold: #b38b1f;
+  --sage: #4f6452;
+  --sage-dim: rgba(79, 100, 82, 0.16);
+
+  --card: #f1ede3;
+  --card-foreground: #1a1918;
+  --popover: #ede8dc;
+  --popover-foreground: #1a1918;
+
+  --primary: #1a1918;
+  --primary-foreground: #f7f5f0;
+  --secondary: #e6e0d2;
+  --secondary-foreground: #1a1918;
+  --muted: #eae5d8;
+  --muted-foreground: #737068;
+  --accent: #ddd7c7;
+  --accent-foreground: #1a1918;
+  --destructive: #dc2626;
+  --destructive-foreground: #f7f5f0;
+
+  --border: rgba(26, 25, 24, 0.14);
+  --border-subtle: rgba(26, 25, 24, 0.07);
+  --border-strong: rgba(26, 25, 24, 0.28);
+  --input: rgba(26, 25, 24, 0.14);
+  --ring: rgba(26, 25, 24, 0.4);
+
+  /* Explicit Semantic Color Tokens */
+  --color-bg: var(--background);
+  --color-bg-secondary: var(--surface-deep);
+  --color-text: var(--foreground);
+  --color-text-muted: var(--ash);
+  --color-border: var(--border);
+  --color-accent: var(--gold);
+  --color-surface: var(--surface);
+  --color-overlay: rgba(237, 232, 220, 0.85);
+  --color-button-bg: var(--primary);
+  --color-button-text: var(--primary-foreground);
+
+  /* Shadows for Light Parchment */
+  --shadow-soft: 0 10px 30px -10px rgba(40, 35, 30, 0.08);
+  --shadow-deep: 0 25px 50px -12px rgba(40, 35, 30, 0.14);
+  --shadow-glow: 0 0 25px rgba(26, 25, 24, 0.04);
 }
 
 @layer base {
@@ -85,6 +202,7 @@
 
   html {
     -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
   }
 
   body {
@@ -92,7 +210,9 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
+    transition: background-color 0.4s ease, color 0.4s ease;
   }
 
   ::selection {
@@ -102,18 +222,20 @@
 
   h1,
   h2,
-  h3 {
+  h3,
+  h4 {
     font-family: var(--font-display);
     font-weight: 300;
+    letter-spacing: -0.015em;
   }
 
   :focus-visible {
-    outline: 1px solid var(--color-ivory);
+    outline: 1.5px solid var(--color-ivory);
     outline-offset: 3px;
   }
 }
 
-/* ── Utilities ────────────────────────────────────────────── */
+/* ── Luxury Editorial Utilities ─────────────────────────── */
 
 @utility grain {
   position: relative;
@@ -122,17 +244,18 @@
     position: absolute;
     inset: 0;
     pointer-events: none;
-    opacity: 0.035;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.028;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
     mix-blend-mode: overlay;
+    z-index: 1;
   }
 }
 
 @utility label-xs {
   font-family: var(--font-sans);
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 500;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--color-ash);
 }

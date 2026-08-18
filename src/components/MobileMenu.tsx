@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Instagram, MessageCircle, Phone, X } from "lucide-react";
 import { Logo } from "./Logo";
+import { ThemeToggle } from "./ThemeToggle";
 import { contact, nav } from "@/data/siteContent";
 import { useBodyScrollLock } from "@/hooks/useSiteUx";
 import { track } from "@/lib/analytics";
@@ -63,18 +64,21 @@ export function MobileMenu({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.28 }}
-          className="fixed inset-0 z-[60] grain bg-surface-deep lg:hidden"
+          className="fixed inset-0 z-[120] grain bg-surface-deep lg:hidden overflow-y-auto"
         >
           <div className="shell flex h-[72px] items-center justify-between">
             <Logo small />
-            <button
-              type="button"
-              onClick={onClose}
-              aria-label="Cerrar menú"
-              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-border text-ivory"
-            >
-              <X className="size-4" aria-hidden="true" />
-            </button>
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
+              <button
+                type="button"
+                onClick={onClose}
+                aria-label="Cerrar menú"
+                className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-border text-ivory cursor-pointer"
+              >
+                <X className="size-4" aria-hidden="true" />
+              </button>
+            </div>
           </div>
 
           <nav aria-label="Navegación móvil" className="shell mt-6">

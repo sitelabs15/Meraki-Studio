@@ -13,6 +13,7 @@ import { ContactCTA } from "@/components/ContactCTA";
 import { Footer } from "@/components/Footer";
 import { CustomCursor } from "@/components/CustomCursor";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
+import { LoadingScreen } from "@/components/LoadingScreen";
 import { contact } from "@/data/siteContent";
 import { useSmoothScroll } from "@/hooks/useSiteUx";
 
@@ -56,6 +57,7 @@ function Index() {
 
   return (
     <>
+      <LoadingScreen />
       <a
         href="#contenido"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-primary focus:px-5 focus:py-3 focus:text-xs focus:uppercase focus:tracking-[0.18em] focus:text-primary-foreground"

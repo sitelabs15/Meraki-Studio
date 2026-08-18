@@ -146,11 +146,11 @@ export default function SocialCards({ cards }: SocialCardsProps) {
 
         if (isFirstMount) {
           gsap.set(card, { x: 0, y: `${12 * hMult}rem`, rotation: 0, scale: 0.5, opacity: 0 });
-          gsap.to(card, { ...target, duration: 1.2, ease: "elastic.out(1.05,.78)", delay: 0.2 + slot * 0.06, onComplete: onCardDone });
+          gsap.to(card, { ...target, duration: 0.95, ease: "power3.out", delay: 0.15 + slot * 0.05, onComplete: onCardDone });
         } else if (!wasVisible) {
           const enterX = direction === "right" ? 40 : -40;
           gsap.set(card, { x: `${enterX}rem`, y: `${y * hMult}rem`, rotation: direction === "right" ? 30 : -30, scale: 0.5, opacity: 0 });
-          gsap.to(card, { ...target, duration: 0.6, ease: "power2.out", onComplete: onCardDone });
+          gsap.to(card, { ...target, duration: 0.65, ease: "power3.out", onComplete: onCardDone });
         } else {
           gsap.to(card, { ...target, duration: 0.5, ease: "power2.out", onComplete: onCardDone });
         }
@@ -222,9 +222,9 @@ export default function SocialCards({ cards }: SocialCardsProps) {
           y: `${targetY}rem`,
           rotation: targetRot,
           scale: targetScale,
-          duration: 0.4,
+          duration: 0.45,
           delay,
-          ease: "elastic.out(1,.75)",
+          ease: "power3.out",
           overwrite: "auto",
         });
         gsap.set(el, { zIndex: targetZIndex });

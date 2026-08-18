@@ -43,7 +43,7 @@ export function FloatingWhatsApp() {
           : { duration: 0.35 },
       }}
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
-      className="fixed bottom-8 right-8 sm:bottom-10 sm:right-10 z-[70] inline-flex min-h-12 min-w-12 items-center gap-2.5 rounded-full border border-ivory/50 bg-[#1e1e22]/95 px-5 text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-ivory backdrop-blur-xl shadow-[0_0_22px_rgba(242,240,234,0.38)] transition-colors duration-300 hover:bg-primary hover:text-primary-foreground hover:shadow-[0_0_30px_rgba(242,240,234,0.6)]"
+      className="fixed bottom-8 right-8 sm:bottom-10 sm:right-10 z-[70] inline-flex min-h-12 min-w-12 items-center gap-2.5 rounded-full border border-border/80 bg-surface-elevated/95 px-5 text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-ivory backdrop-blur-xl shadow-2xl transition-all duration-300 hover:border-ivory hover:bg-primary hover:text-primary-foreground hover:scale-[1.03] cursor-pointer"
       tabIndex={visible ? 0 : -1}
       aria-hidden={!visible}
     >

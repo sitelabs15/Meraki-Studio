@@ -2,48 +2,53 @@ import { useEffect, useState } from "react";
 import { motion, useMotionValue, useSpring } from "motion/react";
 import { useFinePointer } from "@/hooks/useSiteUx";
 
-/**
- * Cursor personalizado: solo en punteros finos con hover y sin reduced-motion.
- * El cursor nativo se oculta únicamente cuando el personalizado ya está activo.
- */
 export function CustomCursor() {
   const fine = useFinePointer();
   const [ready, setReady] = useState(false);
-  const [variant, setVariant] = useState<"default" | "link" | "view" | "drag" | "hidden">("default");
-  const x = useMotionValue(-100);
-  const y = useMotionValue(-100);
-  const sx = useSpring(x, { stiffness: 500, damping: 40, mass: 0.4 });
-  const sy = useSpring(y, { stiffness: 500, damping: 40, mass: 0.4 });
+  const [variant, setVariant] = useState<"default" | "hover" | "view" | "hidden">("default");
+  
+  const mouseX = useMotionValue(-100);
+  const mouseY = useMotionValue(-100);
+  
+  // Outer ring spring: ultra smooth and responsive
+  const ringX = useSpring(mouseX, { stiffness: 450, damping: 36, mass: 0.35 });
+  const ringY = useSpring(mouseY, { stiffness: 450, damping: 36, mass: 0.35 });
+
+  // Inner dot spring: fast lock-on
+  const dotX = useSpring(mouseX, { stiffness: 850, damping: 45, mass: 0.1 });
+  const dotY = useSpring(mouseY, { stiffness: 850, damping: 45, mass: 0.1 });
 
   useEffect(() => {
     if (!fine) return;
     setReady(true);
-    document.documentElement.style.cursor = "none";
 
-    const move = (e: MouseEvent) => {
-      x.set(e.clientX);
-      y.set(e.clientY);
+    const onMouseMove = (e: MouseEvent) => {
+      mouseX.set(e.clientX);
+      mouseY.set(e.clientY);
       const el = e.target as HTMLElement | null;
       if (!el) return;
-      if (el.closest("input, textarea, select, [data-cursor='native']")) setVariant("hidden");
-      else if (el.closest("[data-cursor='drag']")) setVariant("drag");
-      else if (el.closest("[data-cursor='view']")) setVariant("view");
-      else if (el.closest("a, button, [role='button']")) setVariant("link");
-      else setVariant("default");
+
+      if (el.closest("input, textarea, select, [data-cursor='native']")) {
+        setVariant("hidden");
+      } else if (el.closest("[data-cursor='view']")) {
+        setVariant("view");
+      } else if (el.closest("a, button, [role='button'], [role='switch'], label")) {
+        setVariant("hover");
+      } else {
+        setVariant("default");
+      }
     };
 
-    window.addEventListener("mousemove", move);
+    window.addEventListener("mousemove", onMouseMove, { passive: true });
     return () => {
-      window.removeEventListener("mousemove", move);
-      document.documentElement.style.cursor = "";
+      window.removeEventListener("mousemove", onMouseMove);
     };
-  }, [fine, x, y]);
+  }, [fine, mouseX, mouseY]);
 
   useEffect(() => {
     if (!ready) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Tab") {
-        document.documentElement.style.cursor = "";
         setReady(false);
       }
     };
@@ -53,26 +58,41 @@ export function CustomCursor() {
 
   if (!fine || !ready) return null;
 
-  const size = variant === "view" || variant === "drag" ? 74 : variant === "link" ? 46 : 30;
+  const ringSize = variant === "view" ? 54 : variant === "hover" ? 44 : 26;
+  const ringOpacity = variant === "hidden" ? 0 : variant === "hover" ? 0.75 : 0.45;
+  const dotScale = variant === "hover" ? 1.5 : variant === "view" ? 0 : 1;
 
   return (
-    <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-[9999] hidden lg:block">
+    <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-[9990] hidden lg:block overflow-hidden">
+      {/* Outer subtle ring */}
       <motion.div
-        style={{ x: sx, y: sy }}
-        className="absolute left-0 top-0"
+        style={{ x: ringX, y: ringY }}
+        className="absolute left-0 top-0 will-change-transform"
       >
         <motion.div
-          animate={{ width: size, height: size, opacity: variant === "hidden" ? 0 : 1 }}
-          transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-          className="flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-ivory/70 mix-blend-difference"
-        >
-          <span className="text-[0.55rem] font-semibold uppercase tracking-[0.16em] text-ivory">
-            {variant === "view" ? "Ver" : variant === "drag" ? "Arrastra" : ""}
-          </span>
-        </motion.div>
+          animate={{
+            width: ringSize,
+            height: ringSize,
+            opacity: ringOpacity,
+            borderColor: variant === "view" ? "rgba(212, 175, 55, 0.7)" : "rgba(245, 243, 237, 0.4)",
+          }}
+          transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+          className="flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-ivory/40 mix-blend-difference"
+        />
+      </motion.div>
+
+      {/* Inner precise dot */}
+      <motion.div
+        style={{ x: dotX, y: dotY }}
+        className="absolute left-0 top-0 will-change-transform"
+      >
         <motion.span
-          animate={{ opacity: variant === "hidden" || variant === "view" || variant === "drag" ? 0 : 1 }}
-          className="absolute left-0 top-0 size-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-ivory mix-blend-difference"
+          animate={{
+            scale: dotScale,
+            opacity: variant === "hidden" ? 0 : 1,
+          }}
+          transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          className="block size-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-ivory mix-blend-difference"
         />
       </motion.div>
     </div>

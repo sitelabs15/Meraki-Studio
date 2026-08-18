@@ -1,14 +1,15 @@
-import { lazy, Suspense, useMemo, useState } from "react";
-import { motion, useReducedMotion } from "motion/react";
-import { Instagram, Plus } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { AnimatePresence } from "motion/react";
+import { ChevronDown, ChevronUp, Instagram } from "lucide-react";
 import { contact, portfolio, portfolioCategories, type Project } from "@/data/siteContent";
 import { SectionHeading } from "./SectionHeading";
+import { PortfolioLightbox } from "./PortfolioLightbox";
 import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
-const PortfolioLightbox = lazy(() =>
-  import("./PortfolioLightbox").then((m) => ({ default: m.PortfolioLightbox })),
-);
+gsap.registerPlugin(ScrollTrigger);
 
 // Importar dinámicamente cada subcarpeta organizada por categorías de trabajos reales
 const colorModules = import.meta.glob<{ default: string }>(
@@ -28,8 +29,6 @@ const pequenosModules = import.meta.glob<{ default: string }>(
   { eager: true }
 );
 
-const spans = ["normal", "normal", "wide", "normal", "tall", "normal"] as const;
-
 let projectIndex = 0;
 const createCategoryProjects = (
   modules: Record<string, { default: string }>,
@@ -48,7 +47,7 @@ const createCategoryProjects = (
       alt: `Tatuaje ${category} por Meraki Studio #${numStr}`,
       width: 900,
       height: 1200,
-      span: spans[projectIndex % spans.length],
+      span: "normal",
     };
   });
 };
@@ -60,17 +59,19 @@ const realProjects: Project[] = [
   ...createCategoryProjects(grandesModules, "Proyectos grandes"),
 ];
 
-const INITIAL_LIMIT = 9;
+// 2 filas x 3 columnas = 6 piezas inicialmente
+const INITIAL_LIMIT = 6;
 
 export function Portfolio() {
   const [category, setCategory] = useState("Todos");
-  const [visibleCount, setVisibleCount] = useState(INITIAL_LIMIT);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [openIndex, setOpenIndex] = useState<number | null>(null);
-  const reduce = useReducedMotion();
+  const sectionRef = useRef<HTMLElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
 
   const handleCategoryChange = (c: string) => {
     setCategory(c);
-    setVisibleCount(INITIAL_LIMIT);
+    setIsExpanded(false);
   };
 
   const filteredProjects = useMemo(
@@ -82,8 +83,8 @@ export function Portfolio() {
   );
 
   const displayedProjects = useMemo(
-    () => filteredProjects.slice(0, visibleCount),
-    [filteredProjects, visibleCount],
+    () => (isExpanded ? filteredProjects : filteredProjects.slice(0, INITIAL_LIMIT)),
+    [filteredProjects, isExpanded],
   );
 
   const categoryCounts = useMemo(() => {
@@ -101,8 +102,64 @@ export function Portfolio() {
     track("portfolio_view", { project: project.title });
   };
 
+  // GSAP scroll trigger for gallery wall cards
+  useEffect(() => {
+    const isReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (isReducedMotion || !gridRef.current) return;
+
+    const ctx = gsap.context(() => {
+      const cards = gridRef.current?.querySelectorAll<HTMLElement>(".gallery-card");
+      if (!cards || !cards.length) return;
+
+      cards.forEach((card, idx) => {
+        const img = card.querySelector<HTMLElement>(".gallery-img");
+
+        // Staggered masked reveal
+        gsap.set(card, {
+          clipPath: idx % 2 === 0 ? "inset(100% 0% 0% 0%)" : "inset(0% 0% 100% 0%)",
+          opacity: 0,
+          scale: 0.98,
+        });
+
+        gsap.to(card, {
+          clipPath: "inset(0% 0% 0% 0%)",
+          opacity: 1,
+          scale: 1,
+          duration: 0.85,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: card,
+            start: "top 88%",
+            toggleActions: "play none none none",
+          },
+        });
+
+        // Inner image parallax
+        if (img) {
+          gsap.to(img, {
+            yPercent: -8,
+            ease: "none",
+            scrollTrigger: {
+              trigger: card,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 1,
+            },
+          });
+        }
+      });
+    }, gridRef);
+
+    return () => ctx.revert();
+  }, [displayedProjects]);
+
   return (
-    <section id="trabajos" className="border-t border-border bg-background py-20 lg:py-32">
+    <section
+      id="trabajos"
+      ref={sectionRef}
+      data-scroll-section="portfolio-gallery"
+      className="border-t border-border bg-background py-20 lg:py-32"
+    >
       <div className="shell">
         <SectionHeading label={portfolio.label} title={portfolio.title} />
 
@@ -115,7 +172,7 @@ export function Portfolio() {
               aria-pressed={category === c}
               onClick={() => handleCategoryChange(c)}
               className={cn(
-                "min-h-11 rounded-full border px-5 text-[0.68rem] font-medium uppercase tracking-[0.16em] transition-colors duration-200",
+                "min-h-11 rounded-full border px-5 text-[0.68rem] font-medium uppercase tracking-[0.16em] transition-colors duration-200 cursor-pointer",
                 category === c
                   ? "border-ivory bg-primary text-primary-foreground"
                   : "border-border text-ash hover:border-ivory hover:text-ivory",
@@ -132,37 +189,32 @@ export function Portfolio() {
           </p>
         ) : (
           <>
-            <div className="mt-10 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
+            {/* Editorial Gallery Wall */}
+            <div
+              ref={gridRef}
+              className="gallery-wall group/wall mt-10 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5"
+            >
               {displayedProjects.map((project, i) => (
-                <motion.button
+                <button
                   key={project.id}
                   type="button"
                   data-cursor="view"
                   onClick={() => openAt(i, project)}
-                  initial={reduce ? false : { opacity: 0, y: 26 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-60px" }}
-                  transition={{ duration: 0.6, delay: Math.min((i % 6) * 0.06, 0.3), ease: [0.22, 1, 0.36, 1] }}
-                  className={cn(
-                    "group relative block overflow-hidden rounded-sm bg-surface-deep text-left",
-                    project.span === "wide" && "sm:col-span-2",
-                    project.span === "tall" && "lg:row-span-2",
-                  )}
+                  className="gallery-card group relative block overflow-hidden rounded-sm bg-surface-deep text-left aspect-[4/5] will-change-transform transition-opacity duration-500 group-hover/wall:opacity-60 hover:!opacity-100 cursor-pointer"
                   aria-label={`Ver proyecto ${project.title}`}
                 >
-                  <img
-                    src={project.image}
-                    alt={project.alt}
-                    width={project.width}
-                    height={project.height}
-                    loading={i < 4 ? "eager" : "lazy"}
-                    decoding="async"
-                    className={cn(
-                      "w-full object-cover opacity-85 grayscale transition-[transform,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04] group-hover:opacity-100",
-                      project.span === "wide" ? "aspect-[16/10]" : project.span === "tall" ? "aspect-[3/5]" : "aspect-[4/5]",
-                    )}
-                  />
-                  <span className="absolute left-4 top-4 label-xs text-ivory">{project.number}</span>
+                  <div className="size-full overflow-hidden">
+                    <img
+                      src={project.image}
+                      alt={project.alt}
+                      width={project.width}
+                      height={project.height}
+                      loading={i < 6 ? "eager" : "lazy"}
+                      decoding="async"
+                      className="gallery-img size-full object-cover opacity-85 grayscale contrast-[1.04] scale-[1.08] transition-[transform,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.12] group-hover:opacity-100 will-change-transform"
+                    />
+                  </div>
+                  <span className="absolute left-4 top-4 label-xs text-ivory drop-shadow-md">{project.number}</span>
                   <span className="absolute inset-0 flex flex-col justify-end bg-surface-deep/0 p-5 transition-colors duration-500 group-hover:bg-surface-deep/55 group-focus-visible:bg-surface-deep/55">
                     <span className="translate-y-3 opacity-0 transition-[transform,opacity] duration-500 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">
                       <span className="label-xs text-ivory-dim">
@@ -176,20 +228,29 @@ export function Portfolio() {
                       </span>
                     </span>
                   </span>
-                </motion.button>
+                </button>
               ))}
             </div>
 
-            {/* Botón para cargar más piezas sin hacer la página infinitamente larga */}
-            {visibleCount < filteredProjects.length && (
+            {/* Botón para desplegar la galería completa */}
+            {filteredProjects.length > INITIAL_LIMIT && (
               <div className="mt-12 flex justify-center">
                 <button
                   type="button"
-                  onClick={() => setVisibleCount((prev) => prev + 9)}
-                  className="inline-flex min-h-12 items-center gap-2.5 rounded-full border border-border/80 bg-surface/60 px-8 text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-ivory transition-all duration-300 hover:border-ivory hover:bg-primary hover:text-primary-foreground hover:scale-[1.02]"
+                  onClick={() => setIsExpanded((prev) => !prev)}
+                  className="inline-flex min-h-12 items-center gap-2.5 rounded-full border border-border/80 bg-surface/60 px-8 text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-ivory transition-all duration-300 hover:border-ivory hover:bg-primary hover:text-primary-foreground hover:scale-[1.02] cursor-pointer shadow-lg"
                 >
-                  <Plus className="size-4" aria-hidden="true" />
-                  Cargar más piezas (+{filteredProjects.length - visibleCount} restantes)
+                  {isExpanded ? (
+                    <>
+                      <ChevronUp className="size-4" aria-hidden="true" />
+                      Ver menos
+                    </>
+                  ) : (
+                    <>
+                      <ChevronDown className="size-4" aria-hidden="true" />
+                      Ver más
+                    </>
+                  )}
                 </button>
               </div>
             )}
@@ -203,7 +264,7 @@ export function Portfolio() {
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => track("instagram_click", { source: "portfolio" })}
-            className="inline-flex min-h-12 items-center justify-center gap-2.5 rounded-full border border-border/80 bg-surface/60 px-8 text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-ivory transition-all duration-300 hover:border-ivory hover:bg-primary hover:text-primary-foreground hover:scale-[1.03] shadow-lg"
+            className="inline-flex min-h-12 items-center justify-center gap-2.5 rounded-full border border-border/80 bg-surface/60 px-8 text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-ivory transition-all duration-300 hover:border-ivory hover:bg-primary hover:text-primary-foreground hover:scale-[1.03] shadow-lg cursor-pointer"
           >
             <Instagram className="size-4" aria-hidden="true" />
             {portfolio.instagramCta}
@@ -211,16 +272,16 @@ export function Portfolio() {
         </div>
       </div>
 
-      {openIndex !== null ? (
-        <Suspense fallback={null}>
+      <AnimatePresence>
+        {openIndex !== null && (
           <PortfolioLightbox
             projects={displayedProjects}
             index={openIndex}
             onIndexChange={setOpenIndex}
             onClose={() => setOpenIndex(null)}
           />
-        </Suspense>
-      ) : null}
+        )}
+      </AnimatePresence>
     </section>
   );
 }

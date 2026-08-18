@@ -6,32 +6,43 @@ type LenisGlobal = {
   destroy: () => void;
 };
 
-/** Scroll suave con Lenis, desactivado con prefers-reduced-motion. */
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+/** Scroll suave con Lenis perfectamente sincronizado con GSAP ScrollTrigger. */
 export function useSmoothScroll() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     let lenis: LenisGlobal | null = null;
-    let frame = 0;
+    let tickerCallback: ((time: number) => void) | null = null;
     let cancelled = false;
 
     import("lenis").then(({ default: Lenis }) => {
       if (cancelled) return;
-      const instance = new Lenis({ duration: 0.9, smoothWheel: true });
+      const instance = new Lenis({ duration: 0.95, smoothWheel: true });
       lenis = instance as unknown as LenisGlobal;
       (window as unknown as { __lenis?: LenisGlobal }).__lenis = lenis;
 
-      const raf = (time: number) => {
-        instance.raf(time);
-        frame = requestAnimationFrame(raf);
+      // Sincronización oficial Lenis + GSAP ScrollTrigger
+      instance.on("scroll", () => {
+        ScrollTrigger.update();
+      });
+
+      tickerCallback = (time: number) => {
+        instance.raf(time * 1000);
       };
-      frame = requestAnimationFrame(raf);
+
+      gsap.ticker.add(tickerCallback);
+      gsap.ticker.lagSmoothing(0);
     });
 
     return () => {
       cancelled = true;
-      cancelAnimationFrame(frame);
+      if (tickerCallback) {
+        gsap.ticker.remove(tickerCallback);
+      }
       lenis?.destroy();
       delete (window as unknown as { __lenis?: LenisGlobal }).__lenis;
     };
