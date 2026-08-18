@@ -7,8 +7,8 @@ import { scrollToHash } from "@/hooks/useSiteUx";
 import { track } from "@/lib/analytics";
 
 import { FloralVineLeft, FloralRoseRight } from "@/components/FloralAccents";
-import darkRosesBg from "@/assets/dark-roses.png";
-import greenLeaves from "@/assets/green-leaves.png";
+import darkRosesBg from "@/assets/dark-roses.webp";
+import greenLeaves from "@/assets/green-leaves.webp";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -37,7 +37,6 @@ export function Hero() {
     // GSAP context for strict React lifecycle cleanup
     const ctx = gsap.context(() => {
       if (isReducedMotion) {
-        // Reduced motion: ensure all layers are visible and at rest immediately
         gsap.set(
           [
             portraitImgRef.current,
@@ -60,128 +59,52 @@ export function Hero() {
       // ────────────────────────────────────────────────────────────────
       // 1. INITIAL LOAD CHOREOGRAPHED ENTRANCE TIMELINE
       // ────────────────────────────────────────────────────────────────
-      gsap.set(portraitImgRef.current, {
-        clipPath: "inset(100% 0% 0% 0%)",
-        scale: 1.08,
-        filter: "blur(6px)",
-        opacity: 0,
-      });
-
-      gsap.set(titleLeftRef.current, {
-        clipPath: "inset(0% 100% 0% 0%)",
-        x: -32,
-        opacity: 0,
-      });
-
-      gsap.set(titleRightRef.current, {
-        clipPath: "inset(0% 0% 0% 100%)",
-        x: 32,
-        opacity: 0,
-      });
-
-      gsap.set(leafLeftRef.current, {
-        x: -75,
-        rotation: -8,
-        scale: 1.04,
-        opacity: 0,
-      });
-
-      gsap.set(leafRightRef.current, {
-        x: 75,
-        rotation: 8,
-        scale: 1.04,
-        opacity: 0,
-      });
-
-      gsap.set(botanicalRef.current, {
-        opacity: 0,
-        scale: 0.96,
-      });
-
-      gsap.set([eyebrowRef.current, copyRef.current, metaRef.current, scrollHintRef.current], {
-        y: 20,
-        opacity: 0,
-      });
-
-      // Master Entrance Timeline
       const introTl = gsap.timeline({
         defaults: { ease: "power3.out" },
-        delay: 0.12,
+        delay: 0.05,
       });
 
       introTl
-        .to(
+        .fromTo(
           portraitImgRef.current,
-          {
-            clipPath: "inset(0% 0% 0% 0%)",
-            scale: 1,
-            filter: "blur(0px)",
-            opacity: 1,
-            duration: 1.5,
-            ease: "power3.inOut",
-          },
-          0.15
+          { clipPath: "inset(100% 0% 0% 0%)", scale: 1.08, opacity: 0 },
+          { clipPath: "inset(0% 0% 0% 0%)", scale: 1, opacity: 1, duration: 1.2, ease: "power3.inOut" },
+          0
         )
-        .to(
+        .fromTo(
           titleLeftRef.current,
-          {
-            clipPath: "inset(0% 0% 0% 0%)",
-            x: 0,
-            opacity: 1,
-            duration: 1.25,
-            ease: "power3.out",
-          },
-          0.35
+          { clipPath: "inset(0% 100% 0% 0%)", x: -28, opacity: 0 },
+          { clipPath: "inset(0% 0% 0% 0%)", x: 0, opacity: 1, duration: 1.0, ease: "power3.out" },
+          0.2
         )
-        .to(
+        .fromTo(
           titleRightRef.current,
-          {
-            clipPath: "inset(0% 0% 0% 0%)",
-            x: 0,
-            opacity: 1,
-            duration: 1.25,
-            ease: "power3.out",
-          },
-          0.48
+          { clipPath: "inset(0% 0% 0% 100%)", x: 28, opacity: 0 },
+          { clipPath: "inset(0% 0% 0% 0%)", x: 0, opacity: 1, duration: 1.0, ease: "power3.out" },
+          0.3
         )
-        .to(
+        .fromTo(
           leafLeftRef.current,
-          {
-            x: 0,
-            rotation: 0,
-            scale: 1,
-            opacity: 1,
-            duration: 1.4,
-            ease: "power2.out",
-          },
-          0.35
+          { x: -60, rotation: -6, opacity: 0 },
+          { x: 0, rotation: 0, opacity: 1, duration: 1.1, ease: "power2.out" },
+          0.2
         )
-        .to(
+        .fromTo(
           leafRightRef.current,
-          {
-            x: 0,
-            rotation: 0,
-            scale: 1,
-            opacity: 1,
-            duration: 1.4,
-            ease: "power2.out",
-          },
-          0.48
+          { x: 60, rotation: 6, opacity: 0 },
+          { x: 0, rotation: 0, opacity: 1, duration: 1.1, ease: "power2.out" },
+          0.3
         )
-        .to(
+        .fromTo(
           botanicalRef.current,
-          {
-            opacity: 0.28,
-            scale: 1,
-            duration: 1.6,
-            ease: "power2.out",
-          },
-          0.25
+          { opacity: 0, scale: 0.96 },
+          { opacity: 0.28, scale: 1, duration: 1.2, ease: "power2.out" },
+          0.1
         )
-        .to(eyebrowRef.current, { y: 0, opacity: 1, duration: 0.7 }, 0.75)
-        .to(copyRef.current, { y: 0, opacity: 1, duration: 0.8 }, 0.85)
-        .to(metaRef.current, { y: 0, opacity: 1, duration: 0.8 }, 0.95)
-        .to(scrollHintRef.current, { y: 0, opacity: 1, duration: 0.7 }, 1.05);
+        .fromTo(eyebrowRef.current, { y: 15, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6 }, 0.5)
+        .fromTo(copyRef.current, { y: 15, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6 }, 0.6)
+        .fromTo(metaRef.current, { y: 15, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6 }, 0.7)
+        .fromTo(scrollHintRef.current, { y: 15, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6 }, 0.8);
 
       // ────────────────────────────────────────────────────────────────
       // 2. RESPONSIVE PINNED SCROLL WITH gsap.matchMedia()
@@ -194,41 +117,41 @@ export function Hero() {
           scrollTrigger: {
             trigger: heroRef.current,
             start: "top top",
-            end: "+=150%",
+            end: "+=140%",
             pin: true,
-            scrub: 1.2,
+            scrub: 1.0,
             anticipatePin: 1,
             invalidateOnRefresh: true,
           },
         });
 
         scrollTl
-          .to(portraitImgRef.current, { scale: 1.1, y: -30, filter: "brightness(1.05) contrast(1.06)", ease: "none", duration: 0.75 }, 0)
-          .to(leafLeftRef.current, { x: -75, y: 35, rotation: -5, scale: 1.02, ease: "none", duration: 0.75 }, 0)
-          .to(leafRightRef.current, { x: 75, y: 35, rotation: 5, scale: 1.02, ease: "none", duration: 0.75 }, 0)
-          .to(titleLeftRef.current, { y: 40, opacity: 0.7, ease: "none", duration: 0.75 }, 0)
-          .to(titleRightRef.current, { y: 60, opacity: 0.6, ease: "none", duration: 0.75 }, 0)
-          .to(botanicalRef.current, { y: 25, opacity: 0.15, ease: "none", duration: 0.75 }, 0)
-          .to([copyRef.current, metaRef.current, eyebrowRef.current, scrollHintRef.current], { opacity: 0, y: -20, stagger: 0.04, ease: "power2.in", duration: 0.4 }, 0.15)
+          .to(portraitWrapperRef.current, { scale: 1.08, y: -25, ease: "none", duration: 0.75 }, 0)
+          .to(leafLeftRef.current, { x: -65, y: 30, rotation: -4, ease: "none", duration: 0.75 }, 0)
+          .to(leafRightRef.current, { x: 65, y: 30, rotation: 4, ease: "none", duration: 0.75 }, 0)
+          .to(titleLeftRef.current, { y: 35, opacity: 0.75, ease: "none", duration: 0.75 }, 0)
+          .to(titleRightRef.current, { y: 55, opacity: 0.65, ease: "none", duration: 0.75 }, 0)
+          .to(botanicalRef.current, { y: 20, opacity: 0.15, ease: "none", duration: 0.75 }, 0)
+          .to([copyRef.current, metaRef.current, eyebrowRef.current, scrollHintRef.current], { opacity: 0, y: -18, stagger: 0.03, ease: "power2.in", duration: 0.35 }, 0.15)
           // Dismantling transition (last 25%)
-          .to(portraitWrapperRef.current, { y: -80, scale: 1.04, opacity: 0, ease: "power2.in", duration: 0.25 }, 0.75)
-          .to(leafLeftRef.current, { x: -160, opacity: 0, ease: "power2.in", duration: 0.25 }, 0.75)
-          .to(leafRightRef.current, { x: 160, opacity: 0, ease: "power2.in", duration: 0.25 }, 0.75)
-          .to([titleLeftRef.current, titleRightRef.current], { y: 80, opacity: 0, ease: "power2.in", duration: 0.25 }, 0.75);
+          .to(portraitWrapperRef.current, { y: -75, scale: 1.02, opacity: 0, ease: "power2.in", duration: 0.25 }, 0.75)
+          .to(leafLeftRef.current, { x: -140, opacity: 0, ease: "power2.in", duration: 0.25 }, 0.75)
+          .to(leafRightRef.current, { x: 140, opacity: 0, ease: "power2.in", duration: 0.25 }, 0.75)
+          .to([titleLeftRef.current, titleRightRef.current], { y: 70, opacity: 0, ease: "power2.in", duration: 0.25 }, 0.75);
 
         // Desktop pointer parallax
-        const setPortraitX = gsap.quickTo(portraitImgRef.current, "x", { duration: 0.8, ease: "power3.out" });
-        const setPortraitY = gsap.quickTo(portraitImgRef.current, "y", { duration: 0.8, ease: "power3.out" });
+        const setPortraitX = gsap.quickTo(portraitWrapperRef.current, "x", { duration: 0.8, ease: "power3.out" });
+        const setPortraitY = gsap.quickTo(portraitWrapperRef.current, "y", { duration: 0.8, ease: "power3.out" });
         const setLeafLX = gsap.quickTo(leafLeftRef.current, "x", { duration: 1.1, ease: "power3.out" });
         const setLeafRX = gsap.quickTo(leafRightRef.current, "x", { duration: 1.1, ease: "power3.out" });
 
         const onMouseMove = (e: MouseEvent) => {
           const normX = (e.clientX / window.innerWidth - 0.5) * 2;
           const normY = (e.clientY / window.innerHeight - 0.5) * 2;
-          setPortraitX(normX * 12);
-          setPortraitY(normY * 8);
-          setLeafLX(normX * -18);
-          setLeafRX(normX * 18);
+          setPortraitX(normX * 10);
+          setPortraitY(normY * 6);
+          setLeafLX(normX * -15);
+          setLeafRX(normX * 15);
         };
 
         window.addEventListener("mousemove", onMouseMove, { passive: true });
@@ -241,34 +164,34 @@ export function Hero() {
           scrollTrigger: {
             trigger: heroRef.current,
             start: "top top",
-            end: "+=110%",
+            end: "+=100%",
             pin: true,
-            scrub: 1.0,
+            scrub: 0.9,
             anticipatePin: 1,
             invalidateOnRefresh: true,
           },
         });
 
         scrollTl
-          .to(portraitImgRef.current, { scale: 1.06, y: -20, ease: "none", duration: 0.75 }, 0)
-          .to(leafLeftRef.current, { x: -45, y: 20, ease: "none", duration: 0.75 }, 0)
-          .to(leafRightRef.current, { x: 45, y: 20, ease: "none", duration: 0.75 }, 0)
-          .to([copyRef.current, metaRef.current, eyebrowRef.current, scrollHintRef.current], { opacity: 0, y: -15, duration: 0.35 }, 0.15)
-          .to(portraitWrapperRef.current, { opacity: 0, y: -50, ease: "power2.in", duration: 0.25 }, 0.75)
+          .to(portraitWrapperRef.current, { scale: 1.05, y: -18, ease: "none", duration: 0.75 }, 0)
+          .to(leafLeftRef.current, { x: -40, y: 18, ease: "none", duration: 0.75 }, 0)
+          .to(leafRightRef.current, { x: 40, y: 18, ease: "none", duration: 0.75 }, 0)
+          .to([copyRef.current, metaRef.current, eyebrowRef.current, scrollHintRef.current], { opacity: 0, y: -12, duration: 0.3 }, 0.15)
+          .to(portraitWrapperRef.current, { opacity: 0, y: -45, ease: "power2.in", duration: 0.25 }, 0.75)
           .to([leafLeftRef.current, leafRightRef.current], { opacity: 0, ease: "power2.in", duration: 0.25 }, 0.75);
       });
 
       // Mobile: Unpinned smooth scrub (< 640px)
       mm.add("(max-width: 639px)", () => {
-        gsap.to(portraitImgRef.current, {
-          y: -25,
-          scale: 1.04,
+        gsap.to(portraitWrapperRef.current, {
+          y: -20,
+          scale: 1.03,
           ease: "none",
           scrollTrigger: {
             trigger: heroRef.current,
             start: "top top",
             end: "bottom top",
-            scrub: 1,
+            scrub: 0.8,
           },
         });
       });

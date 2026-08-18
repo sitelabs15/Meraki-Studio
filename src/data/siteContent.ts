@@ -7,7 +7,7 @@
  * No se presentan como fotografías reales de la artista ni de clientes.
  */
 
-import artistPortrait from "@/assets/artist-portrait.png";
+import artistPortrait from "@/assets/artist-portrait.webp";
 import work01 from "@/assets/work-01.jpg";
 import work02 from "@/assets/work-02.jpg";
 import work03 from "@/assets/work-03.jpg";

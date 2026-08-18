@@ -6,7 +6,7 @@ import { scrollToHash } from "@/hooks/useSiteUx";
 import { track } from "@/lib/analytics";
 
 import { FloralBranchOverlay, FloralRoseRight } from "@/components/FloralAccents";
-import darkRosesBg from "@/assets/dark-roses.png";
+import darkRosesBg from "@/assets/dark-roses.webp";
 
 gsap.registerPlugin(ScrollTrigger);
 
